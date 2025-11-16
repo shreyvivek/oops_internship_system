@@ -8,6 +8,7 @@ import main.util.InputHandler;
 
 
 /**
+/**
  * Authenticator - Handles login/logout and password updates.
  * <p>
  * Accepts ID or email depending on role and enforces account approval for
@@ -23,6 +24,16 @@ public class Authenticator {
     public Authenticator(UserManager userManager) {
         this.userManager = userManager;
         this.inputHandler = new InputHandler();
+    }
+
+    // --- Login outcomes for GUI ---
+    public enum LoginResult {
+        SUCCESS,
+        USER_NOT_FOUND,
+        WRONG_PASSWORD,
+        REP_EMAIL_REQUIRED,
+        REP_NOT_APPROVED,
+        REP_REJECTED
     }
 
     // Attempt login (ID or Email depending on role)
@@ -73,6 +84,36 @@ public class Authenticator {
         currentUser = user;
         System.out.println("Login successful. Welcome, " + user.getName() + "!");
         return true;
+    }
+
+    /**
+     * Attempt login without printing; intended for GUI to show precise messages.
+     * On SUCCESS, sets currentUser similarly to {@link #login(String, String)}.
+     */
+    public LoginResult attemptLogin(String idOrEmail, String password) {
+        User user = userManager.findUserById(idOrEmail);
+        if (user == null) {
+            user = userManager.findUserByEmail(idOrEmail);
+        }
+        if (user == null) {
+            return LoginResult.USER_NOT_FOUND;
+        }
+        if (!user.getPassword().equals(password)) {
+            return LoginResult.WRONG_PASSWORD;
+        }
+        if (user instanceof CompanyRepresentative rep) {
+            if (!idOrEmail.equalsIgnoreCase(rep.getEmail())) {
+                return LoginResult.REP_EMAIL_REQUIRED;
+            }
+            if (rep.getAccountStatus() == AccountStatus.REJECTED) {
+                return LoginResult.REP_REJECTED;
+            }
+            if (rep.getAccountStatus() != AccountStatus.APPROVED) {
+                return LoginResult.REP_NOT_APPROVED;
+            }
+        }
+        currentUser = user;
+        return LoginResult.SUCCESS;
     }
 
 

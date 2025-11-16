@@ -98,8 +98,7 @@ public class ApplicationManager {
         }
 
         // Rule 6 : Check slots left
-
-        if (internship.hasAvailableSlots()) {
+        if (!internship.hasAvailableSlots()) {
             System.out.println("❌ This internship has no remaining slots.");
             return;
         }

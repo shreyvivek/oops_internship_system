@@ -2,7 +2,6 @@ package main.gui;
 
 import main.control.AppContext;
 import main.entity.*;
-import main.entity.enums.AccountStatus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,32 +59,26 @@ public class MainGUI extends JFrame {
 
     public void handleLogin(String userIdOrEmail, String password) {
         String input = userIdOrEmail.trim().toLowerCase();
-        boolean loggedIn = app.authenticator.login(input, password);
+		main.control.Authenticator.LoginResult result = app.authenticator.attemptLogin(input, password);
 
-        if (!loggedIn) {
-            JOptionPane.showMessageDialog(this,
-                    "Login Failed. Please check your credentials.",
-                    "Login Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+		if (result != main.control.Authenticator.LoginResult.SUCCESS) {
+			String message = switch (result) {
+				case USER_NOT_FOUND -> "No such user ID or email was found.";
+				case WRONG_PASSWORD -> "Incorrect password. Please try again.";
+				case REP_EMAIL_REQUIRED -> "Company Representatives must log in using their company email.";
+				case REP_NOT_APPROVED -> "Your Company Representative account is not approved yet.";
+				case REP_REJECTED -> "Your Company Representative account has been rejected.";
+				default -> "Login failed.";
+			};
+			int type = (result == main.control.Authenticator.LoginResult.WRONG_PASSWORD
+					|| result == main.control.Authenticator.LoginResult.USER_NOT_FOUND)
+					? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
+			JOptionPane.showMessageDialog(this, message, "Login Error", type);
+			return;
+		}
 
-        currentUser = app.authenticator.getCurrentUser();
-
-        // Check if Company Rep is approved
-        if (currentUser instanceof CompanyRepresentative rep &&
-                rep.getAccountStatus() != AccountStatus.APPROVED) {
-            JOptionPane.showMessageDialog(this,
-                    "Your account is not approved yet. Current status: " + rep.getAccountStatus(),
-                    "Account Not Approved",
-                    JOptionPane.WARNING_MESSAGE);
-            app.authenticator.logout();
-            currentUser = null;
-            return;
-        }
-
-        // Redirect to role-specific panel
-        redirectToRolePanel(currentUser);
+		currentUser = app.authenticator.getCurrentUser();
+		redirectToRolePanel(currentUser);
     }
 
     private void redirectToRolePanel(User user) {
