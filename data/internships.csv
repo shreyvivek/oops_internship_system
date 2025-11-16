@@ -1,0 +1,3 @@
+id,title,description,level,major,openDate,closeDate,status,company,repId,totalSlots,slotsLeft,visible
+INT001,Squad Tester,Test product defects,ADVANCED,CCDS,2025-11-05,2025-12-05,APPROVED,MMMM,REP1762336543310,8,8,false
+INT002,BigBrainQuant,Crazy stuff!,BASIC,Computer Science,2025-11-05,2025-12-05,APPROVED,MegaMind,REP1761796264024,5,5,true
