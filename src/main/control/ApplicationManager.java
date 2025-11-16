@@ -128,6 +128,19 @@ public class ApplicationManager {
         System.out.println("✅ Application submitted successfully!");
     }
 
+    /**
+     * Helper to check if a student has ever applied to a given internship.
+     * Mirrors duplicate-prevention logic used during apply flow.
+     */
+    public boolean hasApplied(String studentId, String internshipId) {
+        for (Application existing : appRepo.getApplicationsByStudent(studentId)) {
+            if (existing.getInternshipId().equalsIgnoreCase(internshipId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void approveApplication(Application a) {
         Internship internship = internshipMgr.findInternshipById(a.getInternshipId());
         if (internship == null) return;

@@ -259,6 +259,14 @@ public class StudentPanel extends JPanel {
         }
 
         String internshipId = (String) internshipTableModel.getValueAt(selectedRow, 0);
+        // Check duplicate before attempting apply
+        if (app.applicationManager.hasApplied(student.getUserId(), internshipId)) {
+            JOptionPane.showMessageDialog(this,
+                    "You have already applied for this internship.",
+                    "Already Applied",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         
         // Show confirmation dialog
         int confirm = JOptionPane.showConfirmDialog(this,
