@@ -2,6 +2,10 @@ package main.entity;
 
 import main.entity.enums.ApplicationStatus;
 
+/**
+ * Entity capturing a student's application to a specific internship.
+ * Stores applicant profile snapshot, submission date, and status.
+ */
 public class Application {
     private String applicationId;
     private String studentId;

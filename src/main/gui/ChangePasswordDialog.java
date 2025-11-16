@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Dialog for changing user password
+ * Dialog (Boundary) for securely changing the current user's password.
  */
 public class ChangePasswordDialog extends JDialog {
     private final AppContext app;

@@ -3,6 +3,10 @@ package main.entity;
 import main.entity.enums.InternshipLevel;
 import main.entity.enums.InternshipStatus;
 
+/**
+ * Value object representing user-configurable filters and sorting
+ * when listing internships in Boundary layers.
+ */
 public class FilterSettings {
     private InternshipStatus status;
     private String preferredMajor;

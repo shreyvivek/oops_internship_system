@@ -8,8 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Main GUI entry point for the Internship Placement Management System
- * Provides a modern, user-friendly graphical interface for all user roles
+ * Main GUI entry (Boundary) for the Internship Placement Management System.
+ * Hosts role-specific panels and routes actions to the Control layer via AppContext.
  */
 public class MainGUI extends JFrame {
     private final AppContext app;

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Login panel for user authentication
+ * Login panel (Boundary) for user authentication and navigation to registration.
  */
 public class LoginPanel extends JPanel {
     private final MainGUI mainGUI;

@@ -11,7 +11,8 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Company Representative dashboard GUI panel
+ * Company Representative dashboard (Boundary) for managing internship listings
+ * and reviewing/decisioning student applications.
  */
 public class CompanyRepPanel extends JPanel {
     private final MainGUI mainGUI;

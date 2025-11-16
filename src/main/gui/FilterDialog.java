@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Dialog for configuring internship filters
+ * Dialog (Boundary) for configuring internship filters and sorting.
  */
 public class FilterDialog extends JDialog {
     private final FilterSettings filters;

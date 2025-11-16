@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Dialog for viewing all users in the system
+ * Dialog (Boundary) for viewing all users across roles with summary details.
  */
 public class ViewUsersDialog extends JDialog {
     private final AppContext app;

@@ -13,7 +13,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Student dashboard GUI panel
+ * Student dashboard (Boundary) for browsing internships, applying,
+ * reviewing applications, accepting offers, and requesting withdrawals.
  */
 public class StudentPanel extends JPanel {
     private final MainGUI mainGUI;

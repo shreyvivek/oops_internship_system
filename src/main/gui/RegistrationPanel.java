@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Registration panel for Company Representative registration
+ * Registration panel (Boundary) for Company Representative self-signup.
  */
 public class RegistrationPanel extends JPanel {
     private final MainGUI mainGUI;

@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Dialog for generating and displaying internship reports
+ * Dialog (Boundary) for generating and displaying internship reports with filters.
  */
 public class ReportDialog extends JDialog {
     private final AppContext app;

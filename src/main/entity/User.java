@@ -2,6 +2,12 @@ package main.entity;
 
 import main.control.UserManager;
 
+/**
+ * Base type for all authenticated users in the system.
+ * <p>
+ * Subclasses: {@link Student}, {@link CompanyRepresentative}, {@link CareerCenterStaff}.
+ * Encapsulates shared identity and credential data.
+ */
 public abstract class User {
     private String name;
     private String userId;

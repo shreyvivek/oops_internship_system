@@ -7,6 +7,10 @@ import main.entity.enums.AccountStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Loader/saver utilities for CSV-backed datasets (Users, Internships).
+ * Centralizes data import/export logic for repositories and managers.
+ */
 public class DataLoader {
 
     // ---------- LOAD USERS ----------

@@ -12,7 +12,8 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Career Center Staff dashboard GUI panel
+ * Career Center Staff dashboard (Boundary) for approvals, withdrawals,
+ * user/account authorization, and reporting.
  */
 public class StaffPanel extends JPanel {
     private final MainGUI mainGUI;

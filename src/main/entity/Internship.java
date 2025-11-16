@@ -5,6 +5,10 @@ import main.entity.enums.InternshipStatus;
 
 import java.time.LocalDate;
 
+/**
+ * Entity representing an internship offering with eligibility and visibility controls.
+ * Tracks lifecycle state, capacity, preferred major, and application window.
+ */
 public class Internship {
     private String internshipId;
     private String title;

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.time.LocalDate;
 
 /**
- * Dialog for creating a new internship
+ * Dialog (Boundary) for creating a new internship listing.
  */
 public class CreateInternshipDialog extends JDialog {
     private final AppContext app;

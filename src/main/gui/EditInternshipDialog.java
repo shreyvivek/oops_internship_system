@@ -10,7 +10,7 @@ import java.awt.*;
 import java.time.LocalDate;
 
 /**
- * Dialog for editing an existing internship
+ * Dialog (Boundary) for editing an existing internship while pending approval.
  */
 public class EditInternshipDialog extends JDialog {
     private final AppContext app;
