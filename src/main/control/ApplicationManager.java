@@ -137,10 +137,9 @@ public class ApplicationManager {
             return;
         }
 
+        // Mark as successful; capacity is only consumed upon student acceptance.
         a.setStatus(ApplicationStatus.SUCCESSFUL);
-        internship.decrementSlot();
         saveApplications();
-        internshipMgr.saveAllInternships();
     }
 
     public void rejectApplication(Application a) {

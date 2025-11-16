@@ -116,23 +116,47 @@ public class DataLoader {
     // ---------- APPEND NEW USER ----------
     public static void appendNewUser(User user) {
         if (user instanceof Student s) {
-            // Student: StudentID, Name, Major, Year, Email
-            FileHandler.appendToCSV("data/sample_student_list.csv",
-                    new String[]{s.getUserId(), s.getName(), s.getMajor(),
-                            String.valueOf(s.getYearOfStudy()), s.getEmail(),s.getPassword()});
+            String path = "data/sample_student_list.csv";
+            String header = "StudentID,Name,Major,Year,Email,Password";
+            String[] row = new String[]{s.getUserId(), s.getName(), s.getMajor(),
+                    String.valueOf(s.getYearOfStudy()), s.getEmail(), s.getPassword()};
+            java.io.File f = new java.io.File(path);
+            if (!f.exists()) {
+                java.util.List<String[]> rows = new java.util.ArrayList<>();
+                rows.add(row);
+                FileHandler.writeCSV(path, rows, header);
+            } else {
+                FileHandler.appendToCSV(path, row);
+            }
 
         } else if (user instanceof CompanyRepresentative rep) {
-            // CompanyRep: CompanyRepID, Name, CompanyName, Department, Position, Email, Status
-            FileHandler.appendToCSV("data/sample_company_representative_list.csv",
-                    new String[]{rep.getUserId(), rep.getName(), rep.getCompanyName(),
-                            rep.getDepartment(), rep.getPosition(),
-                            rep.getEmail(), rep.getAccountStatus().name(),rep.getPassword()});
+            String path = "data/sample_company_representative_list.csv";
+            String header = "CompanyRepID,Name,CompanyName,Department,Position,Email,Status,Password";
+            String[] row = new String[]{rep.getUserId(), rep.getName(), rep.getCompanyName(),
+                    rep.getDepartment(), rep.getPosition(), rep.getEmail(),
+                    rep.getAccountStatus().name(), rep.getPassword()};
+            java.io.File f = new java.io.File(path);
+            if (!f.exists()) {
+                java.util.List<String[]> rows = new java.util.ArrayList<>();
+                rows.add(row);
+                FileHandler.writeCSV(path, rows, header);
+            } else {
+                FileHandler.appendToCSV(path, row);
+            }
 
         } else if (user instanceof CareerCenterStaff staff) {
-            // Staff: StaffID, Name, Role, Department, Email
-            FileHandler.appendToCSV("data/sample_staff_list.csv",
-                    new String[]{staff.getUserId(), staff.getName(), staff.getRole(),
-                            staff.getStaffDepartment(), staff.getEmail(),staff.getPassword()});
+            String path = "data/sample_staff_list.csv";
+            String header = "StaffID,Name,Role,Department,Email,Password";
+            String[] row = new String[]{staff.getUserId(), staff.getName(), staff.getRole(),
+                    staff.getStaffDepartment(), staff.getEmail(), staff.getPassword()};
+            java.io.File f = new java.io.File(path);
+            if (!f.exists()) {
+                java.util.List<String[]> rows = new java.util.ArrayList<>();
+                rows.add(row);
+                FileHandler.writeCSV(path, rows, header);
+            } else {
+                FileHandler.appendToCSV(path, row);
+            }
         }
     }
 

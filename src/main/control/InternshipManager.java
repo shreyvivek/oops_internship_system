@@ -204,8 +204,8 @@ public class InternshipManager {
     public boolean majorsMatch(String studentMajor, String internshipMajor) {
         if (studentMajor == null || internshipMajor == null) return false;
 
-        String s = studentMajor.trim().toLowerCase();
-        String i = internshipMajor.trim().toLowerCase();
+        String s = normalizeMajor(studentMajor);
+        String i = normalizeMajor(internshipMajor);
 
         // Common mappings
         String[][] majorGroups = {
@@ -230,8 +230,19 @@ public class InternshipManager {
             if (studentInGroup && internshipInGroup) return true;
         }
 
-        // fallback: substring similarity
+        // fallback: substring similarity after normalization
         return s.contains(i) || i.contains(s);
+    }
+
+    private String normalizeMajor(String raw) {
+        String x = raw.trim().toLowerCase();
+        // Normalize common separators and symbols
+        x = x.replace("&", "and");
+        x = x.replace(".", " ");
+        x = x.replace("-", " ");
+        // Collapse multiple spaces
+        x = x.replaceAll("\\s+", " ").trim();
+        return x;
     }
 
     // --- HELPER: Find by ID ---
