@@ -4,7 +4,7 @@ import main.control.UserManager;
 import main.data.DataLoader;
 
 /**
- * Represents a Student user
+ * Represents a Student user.
  *
  * OOP PRINCIPLES APPLIED:
  * 1. INHERITANCE - Extends User class, inherits common properties

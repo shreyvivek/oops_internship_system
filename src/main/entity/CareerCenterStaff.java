@@ -4,7 +4,7 @@ import main.control.UserManager;
 import main.data.DataLoader;
 
 /**
- * Represents a Career Center Staff user
+ * Represents a Career Center Staff user.
  *
  * OOP PRINCIPLES APPLIED:
  * 1. INHERITANCE - Extends User class

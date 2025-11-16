@@ -5,7 +5,7 @@ import main.data.DataLoader;
 import main.entity.enums.AccountStatus;
 
 /**
- * Represents a Company Representative user
+ * Represents a Company Representative user.
  *
  * OOP PRINCIPLES APPLIED:
  * 1. INHERITANCE - Extends User class

@@ -10,6 +10,9 @@ import java.util.Scanner;
  *  - Validate user inputs (string, int, email, password)
  *  - Prevent input duplication in UI classes
  */
+/**
+ * Utility for typed and validated console input in CLI boundaries.
+ */
 public class InputHandler {
     private final Scanner sc;
 

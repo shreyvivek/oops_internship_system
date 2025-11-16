@@ -12,6 +12,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ApplicationManager - Orchestrates the student application workflow.
+ * <p>
+ * RESPONSIBILITIES:
+ * <ul>
+ *   <li>Validate and submit applications (eligibility, dates, capacity, duplicates)</li>
+ *   <li>List applications for students and company reps</li>
+ *   <li>Approve/Reject applications and handle acceptance (auto-withdraw others)</li>
+ *   <li>Manage withdrawal requests and staff approvals</li>
+ * </ul>
+ * <p>
+ * BCE Mapping: Control (C).
+ */
 public class ApplicationManager {
     private final ApplicationRepository appRepo;
     private final InternshipManager internshipMgr;

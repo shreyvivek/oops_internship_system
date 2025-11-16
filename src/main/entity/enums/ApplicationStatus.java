@@ -1,5 +1,8 @@
 package main.entity.enums;
 
+/**
+ * Lifecycle states of a student's application to an internship.
+ */
 public enum ApplicationStatus {
     PENDING,        // waiting for company rep review
     SUCCESSFUL,     // approved by company rep

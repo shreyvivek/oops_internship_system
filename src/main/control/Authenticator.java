@@ -7,6 +7,14 @@ import main.entity.enums.AccountStatus;
 import main.util.InputHandler;
 
 
+/**
+ * Authenticator - Handles login/logout and password updates.
+ * <p>
+ * Accepts ID or email depending on role and enforces account approval for
+ * company representatives.
+ * <p>
+ * BCE Mapping: Control (C).
+ */
 public class Authenticator {
     private final UserManager userManager;
     private User currentUser;

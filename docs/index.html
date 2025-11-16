@@ -3,72 +3,94 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Internship Placement System – Documentation</title>
+	<title>Internship Placement System · BCE · OOP</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 	<style>
-		:root {
-			--bg: #0f172a;
-			--fg: #e2e8f0;
-			--muted: #94a3b8;
-			--btn: #22c55e;
-			--btn2: #3b82f6;
-			--btn3: #f59e0b;
-			--btn4: #ef4444;
-			--card: #111827;
+		:root{
+			--bg:#0b1020; --bg2:#111a35; --fg:#e6eefc; --muted:#b7c2d9;
+			--card:#0f1730; --border:rgba(255,255,255,.10); --glass:rgba(255,255,255,.06);
 		}
-		html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
-		.wrap { max-width: 960px; margin: 0 auto; padding: 32px 16px 60px; }
-		h1 { margin: 10px 0 8px; font-size: 28px; }
-		p.desc { color: var(--muted); margin-top: 0; }
-		hero { display: block; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 20px; }
-		.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 14px; }
-		.card { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 16px; }
-		.card h3 { margin: 0 0 8px; font-size: 18px; }
-		.card p { margin: 0; color: var(--muted); font-size: 14px; }
-		.btns { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top: 16px; }
-		a.btn { display: inline-block; text-align: center; padding: 12px 14px; border-radius: 8px; color: #0a0a0a; text-decoration: none; font-weight: 700; background: var(--btn); }
-		a.btn.blue { background: var(--btn2); }
-		a.btn.amber { background: var(--btn3); }
-		a.btn.red { background: var(--btn4); }
-		footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
+		*{box-sizing:border-box}
+		html,body{height:100%}
+		body{
+			margin:0;
+			background:
+			  radial-gradient(1200px 600px at 110% -10%, rgba(139,92,246,.25), transparent 60%),
+			  radial-gradient(800px 400px at -10% 110%, rgba(59,130,246,.25), transparent 60%),
+			  linear-gradient(180deg,var(--bg),var(--bg2));
+			color:var(--fg);
+			font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+			overflow-x:hidden;
+		}
+		.noise:before{content:'';position:fixed;inset:0;pointer-events:none;
+			background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" opacity=".035"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+			mix-blend-mode:soft-light;}
+		.wrap{max-width:1080px;margin:0 auto;padding:42px 18px 64px;position:relative;}
+		.hero{position:relative;border:1px solid var(--border);border-radius:18px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));box-shadow:0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;}
+		.ring{position:absolute;width:580px;height:580px;border-radius:50%;top:-240px;right:-220px;background:radial-gradient(closest-side, rgba(110,231,255,.20), transparent 70%);filter:blur(8px);animation:float 12s ease-in-out infinite;}
+		@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(14px) rotate(3deg)}}
+		h1{margin:6px 0 10px;font-size:34px;letter-spacing:.3px}
+		.badges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
+		.badge{font-size:12px;color:var(--muted);padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--glass)}
+		p.desc{color:var(--muted);margin:6px 0 0}
+		.btns{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-top:20px}
+		a.btn{display:flex;gap:10px;align-items:center;justify-content:center;padding:13px 14px;border-radius:12px;text-decoration:none;font-weight:800;color:#0b0f1c;background:linear-gradient(180deg,#9beafe,#6ee7ff);box-shadow:0 10px 24px rgba(110,231,255,.25), inset 0 1px 0 rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.7);transition:transform .12s ease, box-shadow .12s ease}
+		a.btn:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(110,231,255,.35), inset 0 1px 0 rgba(255,255,255,.9)}
+		a.btn span.i{width:10px;height:10px;border-radius:2px;background:#0b0f1c;box-shadow:0 0 0 1.5px rgba(0,0,0,.15) inset}
+		a.btn.blue{background:linear-gradient(180deg,#93b7ff,#5ea0ff)}
+		a.btn.amber{background:linear-gradient(180deg,#ffd59e,#f9b84e)}
+		a.btn.red{background:linear-gradient(180deg,#ffb0b0,#ff6c6c)}
+		.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:18px}
+		.card{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+		.card h3{margin:0 0 8px;font-size:18px}
+		.card p{margin:0;color:var(--muted);font-size:14px}
+		.kbd{background:#0a0f1c;border:1px solid var(--border);padding:2px 6px;border-radius:6px;font-size:12px}
+		footer{margin-top:36px;color:var(--muted);font-size:13px;text-align:center}
+		footer a{color:#9bd0ff}
 	</style>
 </head>
 <body>
+	<div class="noise"></div>
 	<div class="wrap">
-		<hero>
+		<section class="hero">
+			<div class="ring"></div>
 			<h1>Internship Placement Management System</h1>
-			<p class="desc">Object-Oriented BCE architecture • CLI + Swing GUI • CSV persistence (no DB/JSON/XML)</p>
-			<div class="btns">
-				<!-- Update the href below to your repository URL on GitHub -->
-				<a class="btn" href="https://github.com/shreyvivek/oops_internship_system" target="_blank" rel="noopener">View Code</a>
-				<a class="btn blue" href="javadoc/index.html">Open Javadoc</a>
-				<!-- Place your report PDF at docs/report.pdf -->
-				<a class="btn amber" href="report.pdf" target="_blank" rel="noopener">Open Report (PDF)</a>
-				<!-- Replace the href with your demo video link -->
-				<a class="btn red" href="https://example.com/your-demo-video" target="_blank" rel="noopener">Watch Demo Video</a>
+			<div class="badges">
+				<span class="badge">Object‑Oriented</span>
+				<span class="badge">BCE Architecture</span>
+				<span class="badge">CLI + Swing GUI</span>
+				<span class="badge">CSV Persistence</span>
 			</div>
-		</hero>
-
+			<p class="desc">A clean, maintainable OOP codebase with Boundary–Control–Entity separation and fully generated Javadoc.</p>
+			<div class="btns">
+				<a class="btn" href="https://github.com/shreyvivek/oops_internship_system" target="_blank" rel="noopener"><span class="i"></span>View Code</a>
+				<a class="btn blue" href="javadoc/index.html"><span class="i"></span>Open Javadoc</a>
+				<a class="btn amber" href="report.pdf" target="_blank" rel="noopener"><span class="i"></span>Open Report (PDF)</a>
+				<a class="btn red" href="https://example.com/your-demo-video" target="_blank" rel="noopener"><span class="i"></span>Watch Demo Video</a>
+			</div>
+		</section>
 		<div class="grid">
 			<div class="card">
 				<h3>Architecture</h3>
-				<p>Boundary–Control–Entity separation with package-level docs and class responsibilities.</p>
+				<p>Boundary–Control–Entity with package‑level docs and class responsibilities captured in Javadoc.</p>
 			</div>
 			<div class="card">
 				<h3>OOP Principles</h3>
-				<p>Encapsulation, SRP, Composition, Polymorphism. Business logic centralized in Control layer.</p>
+				<p>Encapsulation, SRP, Composition, Polymorphism. Business logic centralized in Control; Entities model state.</p>
 			</div>
 			<div class="card">
 				<h3>Persistence</h3>
-				<p>CSV-backed repositories with clean I/O abstraction. No database, JSON, or XML used.</p>
+				<p>CSV‑backed repositories with clean I/O abstraction. No database, JSON, or XML required.</p>
 			</div>
 			<div class="card">
 				<h3>Run Modes</h3>
-				<p>GUI: <code>java -cp out main.InternshipPlacementSystem --gui</code><br/>CLI: <code>--cli</code></p>
+				<p>GUI: <span class="kbd">java -cp out main.InternshipPlacementSystem --gui</span><br/>CLI: <span class="kbd">--cli</span></p>
 			</div>
 		</div>
-
 		<footer>
-			&copy; Internship Placement System • Generated Javadoc available under <a href="javadoc/index.html" style="color:#93c5fd">docs/javadoc</a>.
+			&copy; Internship Placement System • <a href="javadoc/index.html">docs/javadoc</a>
 		</footer>
 	</div>
 </body>

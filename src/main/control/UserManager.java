@@ -9,6 +9,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UserManager - In-memory user directory and account operations.
+ * <p>
+ * RESPONSIBILITIES:
+ * <ul>
+ *   <li>Find users by ID/email, list users, add/remove users</li>
+ *   <li>Change passwords and manage company rep approvals</li>
+ *   <li>Delegate CSV persistence to {@link main.data.DataLoader}</li>
+ * </ul>
+ */
 public class UserManager {
     private final List<User> users = new ArrayList<>();
 

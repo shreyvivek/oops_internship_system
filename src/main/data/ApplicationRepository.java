@@ -6,6 +6,10 @@ import main.entity.enums.ApplicationStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository for {@link main.entity.Application} backed by CSV storage.
+ * Provides simple query methods and persists changes on update.
+ */
 public class ApplicationRepository {
     private final List<Application> applications;
     private final String filePath;

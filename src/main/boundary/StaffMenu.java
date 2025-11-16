@@ -6,6 +6,10 @@ import main.util.InputHandler;
 
 import java.util.List;
 
+/**
+ * StaffMenu (Boundary) - CLI for staff approvals and reporting:
+ * approve/reject internships and company reps, handle withdrawals, view users, generate reports.
+ */
 public class StaffMenu {
     private final AppContext app;
     private final CareerCenterStaff currentStaff;

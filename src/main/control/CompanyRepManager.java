@@ -4,6 +4,15 @@ import main.data.DataLoader;
 import main.entity.CompanyRepresentative;
 import main.entity.enums.AccountStatus;
 
+/**
+ * CompanyRepManager - Control helper for Company Representative accounts.
+ * <p>
+ * RESPONSIBILITIES:
+ * <ul>
+ *   <li>Register new company representatives (default PENDING status)</li>
+ *   <li>Coordinate with UserManager for persistence and approval</li>
+ * </ul>
+ */
 public class CompanyRepManager {
 
     private final UserManager userManager;

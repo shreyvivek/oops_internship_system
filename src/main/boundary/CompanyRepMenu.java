@@ -7,6 +7,10 @@ import main.util.InputHandler;
 
 import java.util.List;
 
+/**
+ * CompanyRepMenu (Boundary) - CLI for company representatives:
+ * manage internships, toggle visibility, and review/decision applications.
+ */
 public class CompanyRepMenu {
     private final AppContext app;
     private final CompanyRepresentative currentRep;

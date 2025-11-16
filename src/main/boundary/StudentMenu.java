@@ -4,6 +4,10 @@ import main.control.*;
 import main.entity.*;
 import main.util.InputHandler;
 
+/**
+ * StudentMenu (Boundary) - CLI for student actions:
+ * view internships, set filters, apply, view/withdraw applications, change password.
+ */
 public class StudentMenu {
     private final AppContext app;
     private final Student currentStudent;

@@ -5,6 +5,10 @@ import main.entity.enums.InternshipLevel;
 import main.entity.enums.InternshipStatus;
 import main.util.InputHandler;
 
+/**
+ * FilterMenu (Boundary) - CLI helper to configure {@link main.entity.FilterSettings}.
+ * Role-driven toggles control which filters are exposed.
+ */
 public class FilterMenu {
 
     private final InputHandler input = new InputHandler();
