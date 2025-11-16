@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Internship Placement System – Documentation</title>
+	<style>
+		:root {
+			--bg: #0f172a;
+			--fg: #e2e8f0;
+			--muted: #94a3b8;
+			--btn: #22c55e;
+			--btn2: #3b82f6;
+			--btn3: #f59e0b;
+			--btn4: #ef4444;
+			--card: #111827;
+		}
+		html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+		.wrap { max-width: 960px; margin: 0 auto; padding: 32px 16px 60px; }
+		h1 { margin: 10px 0 8px; font-size: 28px; }
+		p.desc { color: var(--muted); margin-top: 0; }
+		hero { display: block; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 20px; }
+		.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 14px; }
+		.card { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 16px; }
+		.card h3 { margin: 0 0 8px; font-size: 18px; }
+		.card p { margin: 0; color: var(--muted); font-size: 14px; }
+		.btns { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top: 16px; }
+		a.btn { display: inline-block; text-align: center; padding: 12px 14px; border-radius: 8px; color: #0a0a0a; text-decoration: none; font-weight: 700; background: var(--btn); }
+		a.btn.blue { background: var(--btn2); }
+		a.btn.amber { background: var(--btn3); }
+		a.btn.red { background: var(--btn4); }
+		footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<hero>
+			<h1>Internship Placement Management System</h1>
+			<p class="desc">Object-Oriented BCE architecture • CLI + Swing GUI • CSV persistence (no DB/JSON/XML)</p>
+			<div class="btns">
+				<!-- Update the href below to your repository URL on GitHub -->
+				<a class="btn" href="https://github.com/your-github-username/your-repo" target="_blank" rel="noopener">View Code</a>
+				<a class="btn blue" href="javadoc/index.html">Open Javadoc</a>
+				<!-- Place your report PDF at docs/report.pdf -->
+				<a class="btn amber" href="report.pdf" target="_blank" rel="noopener">Open Report (PDF)</a>
+				<!-- Replace the href with your demo video link -->
+				<a class="btn red" href="https://example.com/your-demo-video" target="_blank" rel="noopener">Watch Demo Video</a>
+			</div>
+		</hero>
+
+		<div class="grid">
+			<div class="card">
+				<h3>Architecture</h3>
+				<p>Boundary–Control–Entity separation with package-level docs and class responsibilities.</p>
+			</div>
+			<div class="card">
+				<h3>OOP Principles</h3>
+				<p>Encapsulation, SRP, Composition, Polymorphism. Business logic centralized in Control layer.</p>
+			</div>
+			<div class="card">
+				<h3>Persistence</h3>
+				<p>CSV-backed repositories with clean I/O abstraction. No database, JSON, or XML used.</p>
+			</div>
+			<div class="card">
+				<h3>Run Modes</h3>
+				<p>GUI: <code>java -cp out main.InternshipPlacementSystem --gui</code><br/>CLI: <code>--cli</code></p>
+			</div>
+		</div>
+
+		<footer>
+			&copy; Internship Placement System • Generated Javadoc available under <a href="javadoc/index.html" style="color:#93c5fd">docs/javadoc</a>.
+		</footer>
+	</div>
+</body>
+</html>
+
