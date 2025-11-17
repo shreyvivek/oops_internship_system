@@ -196,6 +196,7 @@ public class StudentPanel extends JPanel {
         
         for (Internship i : internships) {
             // Students only see approved, visible, major-compatible, and level-eligible internships
+            // Exclude FILLED internships
             boolean visibleOk = i.isVisible() && i.getStatus() == InternshipStatus.APPROVED;
             boolean majorOk = app.internshipManager.majorsMatch(student.getMajor(), i.getPreferredMajor());
             boolean levelOk = (student.getYearOfStudy() <= 2 && i.getLevel() == InternshipLevel.BASIC)
@@ -206,7 +207,7 @@ public class StudentPanel extends JPanel {
             LocalDate opening = LocalDate.parse(i.getOpeningDate());
             boolean dateOk = !LocalDate.now().isBefore(opening) && !LocalDate.now().isAfter(closing);
             
-            if (visibleOk && majorOk && levelOk && dateOk && i.hasAvailableSlots()) {
+            if (visibleOk && majorOk && levelOk && dateOk && i.hasAvailableSlots() && i.getStatus() != InternshipStatus.FILLED) {
                 internshipTableModel.addRow(new Object[]{
                     i.getInternshipId(),
                     i.getTitle(),
@@ -243,9 +244,9 @@ public class StudentPanel extends JPanel {
         boolean hasSuccessfulOffer = app.applicationManager.hasSuccessfulOffer(student);
         acceptOfferButton.setEnabled(hasSuccessfulOffer);
         
-        // Enable withdraw only for pending applications
+        // Enable withdraw for pending (before confirmation) or accepted (after confirmation) applications
         withdrawButton.setEnabled(applications.stream()
-            .anyMatch(a -> a.getStatus() == ApplicationStatus.PENDING));
+            .anyMatch(a -> a.getStatus() == ApplicationStatus.PENDING || a.getStatus() == ApplicationStatus.ACCEPTED));
     }
 
     private void applyForInternship() {
@@ -276,22 +277,18 @@ public class StudentPanel extends JPanel {
         
         if (confirm == JOptionPane.YES_OPTION) {
             // Use the existing application manager logic
-            app.applicationManager.applyForInternship(student, internshipId);
+            String errorMsg = app.applicationManager.applyForInternship(student, internshipId);
             
-            // Check if application was successful by checking if it was added
-            List<Application> apps = app.applicationManager.getMyApplications(student.getUserId());
-            boolean success = apps.stream()
-                .anyMatch(a -> a.getInternshipId().equals(internshipId) && 
-                              a.getStatus() == ApplicationStatus.PENDING);
-            
-            if (success) {
+            if (errorMsg == null) {
+                // Success - no error message means application was created
                 JOptionPane.showMessageDialog(this,
                         "Application submitted successfully!",
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
+                // Show the specific error message
                 JOptionPane.showMessageDialog(this,
-                        "Application failed. Please check eligibility requirements.",
+                        errorMsg.replace("❌ ", ""), // Remove emoji for cleaner GUI
                         "Application Failed",
                         JOptionPane.WARNING_MESSAGE);
             }
@@ -332,11 +329,18 @@ public class StudentPanel extends JPanel {
                 JOptionPane.QUESTION_MESSAGE);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            this.app.applicationManager.acceptOffer(student, appId);
-            JOptionPane.showMessageDialog(this,
-                    "Offer accepted successfully!",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+            String errorMsg = this.app.applicationManager.acceptOffer(student, appId);
+            if (errorMsg == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Offer accepted successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        errorMsg,
+                        "Cannot Accept Offer",
+                        JOptionPane.WARNING_MESSAGE);
+            }
             refreshApplicationTable();
             refreshInternshipTable();
         }
@@ -360,12 +364,30 @@ public class StudentPanel extends JPanel {
                 JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            app.applicationManager.withdrawApplication(student, appId);
-            JOptionPane.showMessageDialog(this,
-                    "Withdrawal request submitted. Awaiting staff approval.",
-                    "Withdrawal Requested",
-                    JOptionPane.INFORMATION_MESSAGE);
-            refreshApplicationTable();
+            // Get the application to check status for better error message
+            Application application = app.applicationManager.getMyApplications(student.getUserId()).stream()
+                .filter(a -> a.getApplicationId().equals(appId))
+                .findFirst()
+                .orElse(null);
+            
+            if (application != null && (application.getStatus() == ApplicationStatus.PENDING || application.getStatus() == ApplicationStatus.ACCEPTED)) {
+                app.applicationManager.withdrawApplication(student, appId);
+                JOptionPane.showMessageDialog(this,
+                        "Withdrawal request submitted. Awaiting staff approval.",
+                        "Withdrawal Requested",
+                        JOptionPane.INFORMATION_MESSAGE);
+                refreshApplicationTable();
+            } else {
+                // Show specific error message
+                String errorMsg = "You can only withdraw pending applications (before confirmation) or accepted applications (after confirmation).";
+                if (application != null && (application.getStatus() == ApplicationStatus.WITHDRAWN || application.getStatus() == ApplicationStatus.WITHDRAWAL_PENDING)) {
+                    errorMsg = "This application has already been withdrawn or is pending withdrawal approval.";
+                }
+                JOptionPane.showMessageDialog(this,
+                        errorMsg,
+                        "Cannot Withdraw",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 

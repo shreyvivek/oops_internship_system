@@ -37,11 +37,13 @@ public class ApplicationManager {
     }
 
     // --- STUDENT APPLY ---
-    public void applyForInternship(Student student, String internshipId) {
+    // Returns null on success, error message string on failure
+    public String applyForInternship(Student student, String internshipId) {
         Internship internship = internshipMgr.findInternshipById(internshipId);
         if (internship == null) {
-            System.out.println("❌ Internship not found.");
-            return;
+            String msg = "❌ Internship not found.";
+            System.out.println(msg);
+            return msg;
         }
 
         // --- Rule 0: Student cannot apply if they already accepted an offer ---
@@ -49,24 +51,34 @@ public class ApplicationManager {
                 .anyMatch(a -> a.getStatus() == ApplicationStatus.ACCEPTED);
 
         if (hasAcceptedOffer) {
-            System.out.println(" ❌ You have already accepted an internship offer. You cannot apply for new internships.");
-            return;
+            String msg = "❌ You have already accepted an internship offer. You cannot apply for new internships.";
+            System.out.println(msg);
+            return msg;
         }
 
-        // Rule 1: Internship must be visible and approved
+        // Rule 1: Internship must be visible, approved, and not filled
         if (!internship.isVisible() || internship.getStatus() != InternshipStatus.APPROVED) {
-            System.out.println("❌ Internship is not open for applications.");
-            return;
+            if (internship.getStatus() == InternshipStatus.FILLED) {
+                String msg = "❌ This internship is full. All slots have been filled.";
+                System.out.println(msg);
+                return msg;
+            }
+            String msg = "❌ Internship is not open for applications.";
+            System.out.println(msg);
+            return msg;
         }
 
-        // --- Rule 2: Check student already has 3 applications ---
-        long existingApps = appRepo.getAllApplications().stream()
-                .filter(a -> a.getStudentId().equalsIgnoreCase(student.getUserId()))
+        // --- Rule 2: Check student already has 3 active applications (PENDING, SUCCESSFUL, or WITHDRAWAL_PENDING) ---
+        long activeApps = appRepo.getApplicationsByStudent(student.getUserId()).stream()
+                .filter(a -> a.getStatus() == ApplicationStatus.PENDING 
+                          || a.getStatus() == ApplicationStatus.SUCCESSFUL
+                          || a.getStatus() == ApplicationStatus.WITHDRAWAL_PENDING)
                 .count();
 
-        if (existingApps >= MAX_APPLICATIONS_PER_STUDENT) {
-            System.out.println(" ❌ You have already submitted " + MAX_APPLICATIONS_PER_STUDENT + " applications. Please withdraw one before applying again.");
-            return;
+        if (activeApps >= MAX_APPLICATIONS_PER_STUDENT) {
+            String msg = "❌ You cannot apply for more than " + MAX_APPLICATIONS_PER_STUDENT + " internships at once. Please withdraw an existing application before applying for a new one.";
+            System.out.println(msg);
+            return msg;
         }
 
         //  Rule 3: No applications before opening and after closing date
@@ -74,18 +86,20 @@ public class ApplicationManager {
         LocalDate opening = LocalDate.parse(internship.getOpeningDate());
 
         if (LocalDate.now().isBefore(opening)) {
-            System.out.println("❌ The application period has not opened yet.");
-            return;
+            String msg = "❌ The application period has not opened yet.";
+            System.out.println(msg);
+            return msg;
         }
         if (LocalDate.now().isAfter(closing)) {
-            System.out.println("❌ The application period has closed.");
-            return;
+            String msg = "❌ The application period has closed.";
+            System.out.println(msg);
+            return msg;
         }
         //  Rule 4: Applications should respect the Major Rules
         if (!internshipMgr.majorsMatch(student.getMajor(), internship.getPreferredMajor())) {
-            System.out.printf("❌ You cannot apply. Internship is restricted to %s majors.%n",
-                    internship.getPreferredMajor());
-            return;
+            String msg = String.format("❌ You cannot apply. Internship is restricted to %s majors.", internship.getPreferredMajor());
+            System.out.println(msg);
+            return msg;
         }
 
 
@@ -93,21 +107,24 @@ public class ApplicationManager {
         boolean levelAllowed = (student.getYearOfStudy() <= 2 && internship.getLevel() == InternshipLevel.BASIC)
                 || (student.getYearOfStudy()  >= 3); // Year 3+ can apply to any level
         if (!levelAllowed) {
-            System.out.println("❌ You are not eligible to apply for this internship level.");
-            return;
+            String msg = "❌ You are not eligible to apply for this internship level.";
+            System.out.println(msg);
+            return msg;
         }
 
         // Rule 6 : Check slots left
         if (!internship.hasAvailableSlots()) {
-            System.out.println("❌ This internship has no remaining slots.");
-            return;
+            String msg = "❌ This internship has no remaining slots.";
+            System.out.println(msg);
+            return msg;
         }
 
         //  Rule 7: Prevent duplicate application for same internship ---
         for (Application existing : appRepo.getApplicationsByStudent(student.getUserId())) {
             if (existing.getInternshipId().equalsIgnoreCase(internshipId)) {
-                System.out.println("❌ You already applied for this internship.");
-                return;
+                String msg = "❌ You already applied for this internship.";
+                System.out.println(msg);
+                return msg;
             }
         }
 
@@ -125,7 +142,9 @@ public class ApplicationManager {
                 ApplicationStatus.PENDING
         );
         appRepo.addApplication(app);
+        appRepo.saveApplications();
         System.out.println("✅ Application submitted successfully!");
+        return null; // Success
     }
 
     /**
@@ -227,19 +246,22 @@ public class ApplicationManager {
 
 
 
-    public void acceptOffer(Student student, String appId) {
+    // Returns null on success, error message string on failure
+    public String acceptOffer(Student student, String appId) {
         Application selected = appRepo.getAllApplications().stream()
                 .filter(a -> a.getApplicationId().equalsIgnoreCase(appId)
                         && a.getStudentId().equalsIgnoreCase(student.getUserId()))
                 .findFirst().orElse(null);
 
         if (selected == null) {
-            System.out.println("Application not found.");
-            return;
+            String msg = "Application not found.";
+            System.out.println(msg);
+            return msg;
         }
         if (selected.getStatus() != ApplicationStatus.SUCCESSFUL) {
-            System.out.println("You can only accept a successful offer.");
-            return;
+            String msg = "You can only accept a successful offer.";
+            System.out.println(msg);
+            return msg;
         }
 
         // Accept the selected one
@@ -249,6 +271,10 @@ public class ApplicationManager {
         Internship acceptedInternship = internshipMgr.findInternshipById(selected.getInternshipId());
         if (acceptedInternship != null) {
             acceptedInternship.decrementSlot();
+            // Set status to FILLED when all slots are taken
+            if (acceptedInternship.getSlotsLeft() == 0) {
+                acceptedInternship.setStatus(InternshipStatus.FILLED);
+            }
             internshipMgr.saveAllInternships();
         }
 
@@ -264,6 +290,7 @@ public class ApplicationManager {
 
         appRepo.saveApplications();
         System.out.println("✅ You have accepted the offer for " + selected.getInternshipId() + ".");
+        return null; // Success
     }
 
     public void displayWithdrawableApplications(Student student) {
@@ -303,14 +330,18 @@ public class ApplicationManager {
         }
 
         //  Rule: Students can only withdraw from approved internships
-        if (internship.getStatus() != InternshipStatus.APPROVED) {
+        if (internship.getStatus() != InternshipStatus.APPROVED && internship.getStatus() != InternshipStatus.FILLED) {
             System.out.println("You can only withdraw applications for approved internships.");
             return;
         }
 
-        //  Rule: Only pending applications can request withdrawal
-        if (app.getStatus() != ApplicationStatus.PENDING) {
-            System.out.println("Only pending applications can be withdrawn.");
+        //  Rule: Can withdraw pending applications (before placement confirmation) or accepted applications (after placement confirmation)
+        if (app.getStatus() != ApplicationStatus.PENDING && app.getStatus() != ApplicationStatus.ACCEPTED) {
+            if (app.getStatus() == ApplicationStatus.WITHDRAWN || app.getStatus() == ApplicationStatus.WITHDRAWAL_PENDING) {
+                System.out.println("This application has already been withdrawn or is pending withdrawal approval.");
+            } else {
+                System.out.println("You can only withdraw pending applications (before confirmation) or accepted applications (after confirmation).");
+            }
             return;
         }
 

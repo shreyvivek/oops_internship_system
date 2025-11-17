@@ -73,10 +73,14 @@ public class StudentMenu {
                 String id = input.readString("Enter Application ID of the offer to accept: ");
                 System.out.println("Accepting this offer will withdraw all other applications.");
                 boolean confirm = input.readYesNo("Proceed?");
-                if (confirm)
-                    app.applicationManager.acceptOffer(currentStudent, id);
-                else
+                if (confirm) {
+                    String errorMsg = app.applicationManager.acceptOffer(currentStudent, id);
+                    if (errorMsg != null) {
+                        System.out.println("❌ " + errorMsg);
+                    }
+                } else {
                     System.out.println("Offer not accepted.");
+                }
             }
         }
     }
