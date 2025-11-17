@@ -264,26 +264,32 @@ public class CompanyRepPanel extends JPanel {
             return;
         }
 
-        // Check if there are any applications
+        // Check if there are any applications (warning only, not blocking)
         List<Application> apps = app.applicationManager.getApplicationsForInternship(internshipId);
+        String confirmMessage = "Are you sure you want to delete this internship? This action cannot be undone.";
         if (!apps.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Cannot delete. There are " + apps.size() + " application(s) for this internship.",
-                "Cannot Delete", 
-                JOptionPane.WARNING_MESSAGE);
-            return;
+            confirmMessage = "Warning: There are " + apps.size() + " application(s) for this internship.\n" +
+                           "Deleting will remove this internship and all associated applications.\n\n" +
+                           "Are you sure you want to proceed? This action cannot be undone.";
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete this internship? This action cannot be undone.",
+                confirmMessage,
                 "Confirm Deletion",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            app.internshipManager.deleteInternship(internshipId, rep.getUserId());
-            JOptionPane.showMessageDialog(this, "Internship deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            refreshInternshipTable();
+            String errorMsg = app.internshipManager.deleteInternship(internshipId, rep.getUserId());
+            if (errorMsg == null) {
+                JOptionPane.showMessageDialog(this, "Internship deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                refreshInternshipTable();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        errorMsg.replace("❌ ", ""), // Remove emoji for cleaner GUI
+                        "Delete Failed",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 
@@ -331,6 +337,7 @@ public class CompanyRepPanel extends JPanel {
             app.applicationManager.approveApplication(application);
             JOptionPane.showMessageDialog(this, "Application approved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             refreshApplicationTable();
+            refreshInternshipTable(); // Refresh to show updated slot counts
         }
     }
 
@@ -357,6 +364,7 @@ public class CompanyRepPanel extends JPanel {
             app.applicationManager.rejectApplication(application);
             JOptionPane.showMessageDialog(this, "Application rejected.", "Success", JOptionPane.INFORMATION_MESSAGE);
             refreshApplicationTable();
+            refreshInternshipTable(); // Refresh to show updated slot counts
         }
     }
 

@@ -406,6 +406,7 @@ public class StaffPanel extends JPanel {
             app.applicationManager.approveWithdrawal(application);
             JOptionPane.showMessageDialog(this, "Withdrawal approved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             refreshWithdrawalTable();
+            refreshInternshipTable(); // Refresh to show updated slot counts (if slot was freed)
         }
     }
 

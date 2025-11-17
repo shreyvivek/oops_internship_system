@@ -146,30 +146,36 @@ public class InternshipManager {
     }
 
     // --- DELETE INTERNSHIP (Company Rep) ---
+    // Returns null on success, error message string on failure
     // Note: Application check should be done by caller (ApplicationManager) before calling this
-    public void deleteInternship(String internshipId, String repId) {
+    public String deleteInternship(String internshipId, String repId) {
         Internship i = findInternshipById(internshipId);
 
         if (i == null) {
-            System.out.println("❌ Internship not found.");
-            return;
+            String msg = "❌ Internship not found.";
+            System.out.println(msg);
+            return msg;
         }
 
         // Ownership check
         if (!i.getRepresentativeId().equalsIgnoreCase(repId)) {
-            System.out.println("❌ Access denied: You can only delete your own internships.");
-            return;
+            String msg = "❌ Access denied: You can only delete your own internships.";
+            System.out.println(msg);
+            return msg;
         }
 
-        // Only deletable when pending
-        if (i.getStatus() != InternshipStatus.PENDING) {
-            System.out.println("❌ Cannot delete. Internship has already been " + i.getStatus());
-            return;
-        }
+        // Company reps can delete internships at any time (no status restriction)
 
-        internshipRepo.removeInternship(internshipId);
+        boolean removed = internshipRepo.removeInternship(internshipId);
+        if (!removed) {
+            String msg = "❌ Failed to delete internship. It may have already been removed.";
+            System.out.println(msg);
+            return msg;
+        }
+        
         internshipRepo.saveInternships();
         System.out.println("✅ Internship " + internshipId + " deleted successfully.");
+        return null; // Success
     }
 
     // --- TOGGLE VISIBILITY (Company Rep) ---

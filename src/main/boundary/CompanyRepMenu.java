@@ -99,14 +99,22 @@ public class CompanyRepMenu {
         System.out.println("\n--- DELETE INTERNSHIP ---");
         String id = input.readString("Enter Internship ID to delete: ");
         
-        // Check if there are any applications
+        // Check if there are any applications (warning only, not blocking)
         List<Application> apps = app.applicationManager.getApplicationsForInternship(id);
         if (!apps.isEmpty()) {
-            System.out.println("❌ Cannot delete. There are " + apps.size() + " application(s) for this internship.");
-            return;
+            System.out.println("⚠ Warning: There are " + apps.size() + " application(s) for this internship.");
+            System.out.println("Deleting will remove this internship and all associated applications.");
+            boolean confirm = input.readYesNo("Proceed with deletion?");
+            if (!confirm) {
+                System.out.println("Deletion cancelled.");
+                return;
+            }
         }
         
-        app.internshipManager.deleteInternship(id, currentRep.getUserId());
+        String errorMsg = app.internshipManager.deleteInternship(id, currentRep.getUserId());
+        if (errorMsg != null) {
+            System.out.println(errorMsg);
+        }
     }
 
     // TOGGLE VISIBILITY
