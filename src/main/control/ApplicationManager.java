@@ -119,12 +119,17 @@ public class ApplicationManager {
             return msg;
         }
 
-        //  Rule 7: Prevent duplicate application for same internship ---
+        //  Rule 7: Prevent duplicate application for same internship (only check active applications)
+        //  Students can re-apply after withdrawing from an internship
         for (Application existing : appRepo.getApplicationsByStudent(student.getUserId())) {
             if (existing.getInternshipId().equalsIgnoreCase(internshipId)) {
-                String msg = "❌ You already applied for this internship.";
-                System.out.println(msg);
-                return msg;
+                // Only block if it's an active application (not withdrawn)
+                if (existing.getStatus() != ApplicationStatus.WITHDRAWN && 
+                    existing.getStatus() != ApplicationStatus.UNSUCCESSFUL) {
+                    String msg = "❌ You already applied for this internship.";
+                    System.out.println(msg);
+                    return msg;
+                }
             }
         }
 
@@ -148,13 +153,17 @@ public class ApplicationManager {
     }
 
     /**
-     * Helper to check if a student has ever applied to a given internship.
-     * Mirrors duplicate-prevention logic used during apply flow.
+     * Helper to check if a student has an active application to a given internship.
+     * Students can re-apply after withdrawing from an internship.
      */
     public boolean hasApplied(String studentId, String internshipId) {
         for (Application existing : appRepo.getApplicationsByStudent(studentId)) {
             if (existing.getInternshipId().equalsIgnoreCase(internshipId)) {
-                return true;
+                // Only return true if it's an active application (not withdrawn/unsuccessful)
+                if (existing.getStatus() != ApplicationStatus.WITHDRAWN && 
+                    existing.getStatus() != ApplicationStatus.UNSUCCESSFUL) {
+                    return true;
+                }
             }
         }
         return false;
