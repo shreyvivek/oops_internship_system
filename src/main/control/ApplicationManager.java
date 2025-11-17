@@ -273,19 +273,31 @@ public class ApplicationManager {
             return msg;
         }
 
+        // Check if internship still has available slots BEFORE accepting
+        Internship acceptedInternship = internshipMgr.findInternshipById(selected.getInternshipId());
+        if (acceptedInternship == null) {
+            String msg = "Internship not found for this application.";
+            System.out.println(msg);
+            return msg;
+        }
+
+        // Check if internship is already filled or has no slots
+        if (acceptedInternship.getStatus() == InternshipStatus.FILLED || !acceptedInternship.hasAvailableSlots()) {
+            String msg = "This internship is full. All slots have been filled.";
+            System.out.println(msg);
+            return msg;
+        }
+
         // Accept the selected one
         selected.setStatus(ApplicationStatus.ACCEPTED);
 
         // Decrement slot count
-        Internship acceptedInternship = internshipMgr.findInternshipById(selected.getInternshipId());
-        if (acceptedInternship != null) {
-            acceptedInternship.decrementSlot();
-            // Set status to FILLED when all slots are taken
-            if (acceptedInternship.getSlotsLeft() == 0) {
-                acceptedInternship.setStatus(InternshipStatus.FILLED);
-            }
-            internshipMgr.saveAllInternships();
+        acceptedInternship.decrementSlot();
+        // Set status to FILLED when all slots are taken
+        if (acceptedInternship.getSlotsLeft() == 0) {
+            acceptedInternship.setStatus(InternshipStatus.FILLED);
         }
+        internshipMgr.saveAllInternships();
 
         // Withdraw all other active applications
         for (Application a : appRepo.getAllApplications()) {
