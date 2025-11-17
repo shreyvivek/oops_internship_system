@@ -61,6 +61,11 @@ public class InternshipRepository {
         }
     }
 
+    // --- DELETE ---
+    public boolean removeInternship(String internshipId) {
+        return internships.removeIf(i -> i.getInternshipId().equalsIgnoreCase(internshipId));
+    }
+
     // --- SAVE TO CSV ---
     public void saveInternships() {
         List<String[]> data = new ArrayList<>();

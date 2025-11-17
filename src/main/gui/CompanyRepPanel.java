@@ -120,6 +120,12 @@ public class CompanyRepPanel extends JPanel {
         editButton.addActionListener(e -> editInternship());
         buttonPanel.add(editButton);
 
+        JButton deleteButton = new JButton("Delete Selected");
+        deleteButton.setBackground(new Color(220, 20, 60));
+        deleteButton.setForeground(Color.BLACK);
+        deleteButton.addActionListener(e -> deleteInternship());
+        buttonPanel.add(deleteButton);
+
         JButton toggleButton = new JButton("Toggle Visibility");
         toggleButton.addActionListener(e -> toggleVisibility());
         buttonPanel.add(toggleButton);
@@ -241,6 +247,44 @@ public class CompanyRepPanel extends JPanel {
         EditInternshipDialog dialog = new EditInternshipDialog((JFrame) SwingUtilities.getWindowAncestor(this), app, rep, internship);
         dialog.setVisible(true);
         refreshInternshipTable();
+    }
+
+    private void deleteInternship() {
+        int selectedRow = internshipTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select an internship to delete.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String internshipId = (String) internshipTableModel.getValueAt(selectedRow, 0);
+        Internship internship = app.internshipManager.findInternshipById(internshipId);
+        
+        if (internship == null) {
+            JOptionPane.showMessageDialog(this, "Internship not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if there are any applications
+        List<Application> apps = app.applicationManager.getApplicationsForInternship(internshipId);
+        if (!apps.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Cannot delete. There are " + apps.size() + " application(s) for this internship.",
+                "Cannot Delete", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to delete this internship? This action cannot be undone.",
+                "Confirm Deletion",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            app.internshipManager.deleteInternship(internshipId, rep.getUserId());
+            JOptionPane.showMessageDialog(this, "Internship deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            refreshInternshipTable();
+        }
     }
 
     private void toggleVisibility() {

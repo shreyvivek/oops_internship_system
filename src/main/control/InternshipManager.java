@@ -145,6 +145,33 @@ public class InternshipManager {
         System.out.println("✅ Internship " + internshipId + " updated successfully.");
     }
 
+    // --- DELETE INTERNSHIP (Company Rep) ---
+    // Note: Application check should be done by caller (ApplicationManager) before calling this
+    public void deleteInternship(String internshipId, String repId) {
+        Internship i = findInternshipById(internshipId);
+
+        if (i == null) {
+            System.out.println("❌ Internship not found.");
+            return;
+        }
+
+        // Ownership check
+        if (!i.getRepresentativeId().equalsIgnoreCase(repId)) {
+            System.out.println("❌ Access denied: You can only delete your own internships.");
+            return;
+        }
+
+        // Only deletable when pending
+        if (i.getStatus() != InternshipStatus.PENDING) {
+            System.out.println("❌ Cannot delete. Internship has already been " + i.getStatus());
+            return;
+        }
+
+        internshipRepo.removeInternship(internshipId);
+        internshipRepo.saveInternships();
+        System.out.println("✅ Internship " + internshipId + " deleted successfully.");
+    }
+
     // --- TOGGLE VISIBILITY (Company Rep) ---
     public void toggleVisibilityForRep(String repId, String internshipId, boolean visible) {
         Internship i = findInternshipById(internshipId);

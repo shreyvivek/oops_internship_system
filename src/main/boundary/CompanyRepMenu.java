@@ -31,23 +31,25 @@ public class CompanyRepMenu {
             System.out.println("2. Set Filters for Internships");
             System.out.println("3. Create New Internship");
             System.out.println("4. Edit Internship");
-            System.out.println("5. Toggle Internship Visibility");
-            System.out.println("6. View Applications");
-            System.out.println("7. Review Applications");
-            System.out.println("8. Change Password");
-            System.out.println("9. Logout");
+            System.out.println("5. Delete Internship");
+            System.out.println("6. Toggle Internship Visibility");
+            System.out.println("7. View Applications");
+            System.out.println("8. Review Applications");
+            System.out.println("9. Change Password");
+            System.out.println("10. Logout");
 
-            int choice = input.readInt("Enter choice: ", 1, 9);
+            int choice = input.readInt("Enter choice: ", 1, 10);
             switch (choice) {
                 case 1 -> app.internshipManager.displayInternshipsForUser(currentRep, filters);
                 case 2 -> filterMenu.open(filters, true, true, true, true, true);
                 case 3 -> createInternshipInput();
                 case 4 -> editInternshipInput();
-                case 5 -> toggleVisibilityInput();
-                case 6 -> viewApplications();
-                case 7 -> reviewApplications();
-                case 8 -> app.authenticator.changePassword(currentRep);
-                case 9 -> running = false;
+                case 5 -> deleteInternshipInput();
+                case 6 -> toggleVisibilityInput();
+                case 7 -> viewApplications();
+                case 8 -> reviewApplications();
+                case 9 -> app.authenticator.changePassword(currentRep);
+                case 10 -> running = false;
             }
         }
     }
@@ -91,6 +93,21 @@ public class CompanyRepMenu {
         );
     }
 
+
+    // DELETE INTERNSHIP
+    private void deleteInternshipInput() {
+        System.out.println("\n--- DELETE INTERNSHIP ---");
+        String id = input.readString("Enter Internship ID to delete: ");
+        
+        // Check if there are any applications
+        List<Application> apps = app.applicationManager.getApplicationsForInternship(id);
+        if (!apps.isEmpty()) {
+            System.out.println("❌ Cannot delete. There are " + apps.size() + " application(s) for this internship.");
+            return;
+        }
+        
+        app.internshipManager.deleteInternship(id, currentRep.getUserId());
+    }
 
     // TOGGLE VISIBILITY
     private void toggleVisibilityInput() {
