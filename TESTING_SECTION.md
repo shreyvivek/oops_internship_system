@@ -1,4 +1,4 @@
-# E. Testing
+# Testing
 
 ## Test Cases and Results
 
