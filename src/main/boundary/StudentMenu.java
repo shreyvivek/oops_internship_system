@@ -2,7 +2,10 @@ package main.boundary;
 
 import main.control.*;
 import main.entity.*;
+import main.entity.enums.ApplicationStatus;
 import main.util.InputHandler;
+
+import java.util.List;
 
 /**
  * StudentMenu (Boundary) - CLI for student actions:
@@ -36,7 +39,17 @@ public class StudentMenu {
 
             int choice = input.readInt("Enter choice: ", 1, 7);
             switch (choice) {
-                case 1 -> app.internshipManager.displayInternshipsForUser(currentStudent, filters);
+                case 1 -> {
+                    // Get internships to exclude (where student has active applications)
+                    List<String> excludeIds = app.applicationManager.getMyApplications(currentStudent.getUserId()).stream()
+                        .filter(a -> a.getStatus() == ApplicationStatus.PENDING
+                                || a.getStatus() == ApplicationStatus.SUCCESSFUL
+                                || a.getStatus() == ApplicationStatus.ACCEPTED
+                                || a.getStatus() == ApplicationStatus.WITHDRAWAL_PENDING)
+                        .map(Application::getInternshipId)
+                        .toList();
+                    app.internshipManager.displayInternshipsForUser(currentStudent, filters, excludeIds);
+                }
                 case 2 -> filterMenu.open(filters, false, false, true, true, false);
                 case 3 -> applyForInternship();
                 case 4 -> viewMyApplications();
@@ -51,7 +64,15 @@ public class StudentMenu {
         System.out.println("\n--- APPLY FOR INTERNSHIP ---");
 
         // Display current view of internships (already filtered by major, level, etc.)
-        app.internshipManager.displayInternshipsForUser(currentStudent, filters);
+        // Exclude internships where student has active applications
+        List<String> excludeIds = app.applicationManager.getMyApplications(currentStudent.getUserId()).stream()
+            .filter(a -> a.getStatus() == ApplicationStatus.PENDING
+                    || a.getStatus() == ApplicationStatus.SUCCESSFUL
+                    || a.getStatus() == ApplicationStatus.ACCEPTED
+                    || a.getStatus() == ApplicationStatus.WITHDRAWAL_PENDING)
+            .map(Application::getInternshipId)
+            .toList();
+        app.internshipManager.displayInternshipsForUser(currentStudent, filters, excludeIds);
 
         // Ask for input only if there are visible internships
         String internshipId = input.readString("\nEnter Internship ID to apply for (or 'cancel' to go back): ");

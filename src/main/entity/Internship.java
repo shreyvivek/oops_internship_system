@@ -78,14 +78,39 @@ public class Internship {
         this.numSlots = newTotal;
         if (slotsLeft > newTotal) slotsLeft = newTotal; // clamp
     }
-    public void setSlotsLeft(int slotsLeft) { this.slotsLeft = slotsLeft; }
+    public void setSlotsLeft(int slotsLeft) { 
+        // Ensure slotsLeft is within valid bounds [0, numSlots]
+        if (slotsLeft < 0) {
+            this.slotsLeft = 0;
+        } else if (slotsLeft > numSlots) {
+            this.slotsLeft = numSlots;
+        } else {
+            this.slotsLeft = slotsLeft;
+        }
+    }
 
 
     public void setStatus(InternshipStatus status) { this.status = status; }
     public void setVisible(boolean visible) { this.visible = visible; }
 
     public void decrementSlot() {
-        if (slotsLeft > 0) slotsLeft--;
+        if (slotsLeft > 0) {
+            slotsLeft--;
+        }
+        // Ensure slotsLeft never goes negative
+        if (slotsLeft < 0) {
+            slotsLeft = 0;
+        }
+    }
+    
+    public void incrementSlot() {
+        if (slotsLeft < numSlots) {
+            slotsLeft++;
+        }
+        // Ensure slotsLeft never exceeds numSlots
+        if (slotsLeft > numSlots) {
+            slotsLeft = numSlots;
+        }
     }
 
     public boolean hasAvailableSlots() {

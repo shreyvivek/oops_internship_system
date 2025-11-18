@@ -173,9 +173,16 @@ public class ApplicationManager {
         Internship internship = internshipMgr.findInternshipById(a.getInternshipId());
         if (internship == null) return;
 
+        // Check slots - use slotsLeft as source of truth
         if (!internship.hasAvailableSlots()) {
             System.out.printf("⚠ Internship '%s' is full.%n", internship.getTitle());
             return;
+        }
+        
+        // If status is FILLED but slotsLeft > 0, fix the inconsistency
+        if (internship.getStatus() == InternshipStatus.FILLED && internship.getSlotsLeft() > 0) {
+            internship.setStatus(InternshipStatus.APPROVED);
+            internshipMgr.saveAllInternships();
         }
 
         // Mark as successful; capacity is only consumed upon student acceptance.
@@ -184,6 +191,7 @@ public class ApplicationManager {
     }
 
     public void rejectApplication(Application a) {
+        // When application is rejected, student can see the internship again in available list
         a.setStatus(ApplicationStatus.UNSUCCESSFUL);
         saveApplications();
     }
@@ -281,11 +289,17 @@ public class ApplicationManager {
             return msg;
         }
 
-        // Check if internship is already filled or has no slots
-        if (acceptedInternship.getStatus() == InternshipStatus.FILLED || !acceptedInternship.hasAvailableSlots()) {
+        // Check if internship has available slots (primary check - slotsLeft is the source of truth)
+        if (!acceptedInternship.hasAvailableSlots()) {
             String msg = "This internship is full. All slots have been filled.";
             System.out.println(msg);
             return msg;
+        }
+        
+        // If status is FILLED but slotsLeft > 0, there's a data inconsistency - allow acceptance and fix status
+        if (acceptedInternship.getStatus() == InternshipStatus.FILLED && acceptedInternship.getSlotsLeft() > 0) {
+            // Fix the inconsistency - if there are slots, it shouldn't be FILLED
+            acceptedInternship.setStatus(InternshipStatus.APPROVED);
         }
 
         // Accept the selected one
@@ -380,8 +394,26 @@ public class ApplicationManager {
     }
 
     public void approveWithdrawal(Application application) {
+        // Check if this was an ACCEPTED application BEFORE changing status (need to free up slot)
+        boolean wasAccepted = application.getStatus() == ApplicationStatus.ACCEPTED;
+        String internshipId = application.getInternshipId();
+        
         application.setStatus(ApplicationStatus.WITHDRAWN);
         saveApplications(); // ✅ persistence
+        
+        // If this was an ACCEPTED application, we need to free up the slot
+        if (wasAccepted) {
+            Internship internship = internshipMgr.findInternshipById(internshipId);
+            if (internship != null) {
+                // Use incrementSlot method which handles bounds checking
+                internship.incrementSlot();
+                // If it was FILLED and now has slots, change back to APPROVED
+                if (internship.getStatus() == InternshipStatus.FILLED && internship.getSlotsLeft() > 0) {
+                    internship.setStatus(InternshipStatus.APPROVED);
+                }
+                internshipMgr.saveAllInternships();
+            }
+        }
     }
 
     public void rejectWithdrawal(Application application) {

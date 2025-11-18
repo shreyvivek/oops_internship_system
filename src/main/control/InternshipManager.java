@@ -291,7 +291,7 @@ public class InternshipManager {
     public void saveAllInternships() {
         internshipRepo.saveInternships();
     }
-    public void displayInternshipsForUser(User user, FilterSettings filters) {
+    public void displayInternshipsForUser(User user, FilterSettings filters, List<String> excludeInternshipIds) {
         List<Internship> all = getFilteredInternships(filters);
         List<Internship> visibleList = new ArrayList<>();
 
@@ -300,12 +300,24 @@ public class InternshipManager {
         if (user instanceof Student s) {
             // Students: only approved, visible, major-compatible, and eligible by level
             for (Internship i : all) {
+                // Exclude internships where student has active applications
+                if (excludeInternshipIds != null && excludeInternshipIds.contains(i.getInternshipId())) {
+                    continue;
+                }
+                
                 boolean visibleOk = i.isVisible() && i.getStatus() == InternshipStatus.APPROVED;
                 boolean majorOk = majorsMatch(s.getMajor(), i.getPreferredMajor());
                 boolean levelOk = (s.getYearOfStudy() <= 2 && i.getLevel() == InternshipLevel.BASIC)
                         || (s.getYearOfStudy() >= 3); // Y3+ can see all levels
+                
+                // Check slots - use slotsLeft as source of truth
+                boolean hasSlots = i.hasAvailableSlots();
+                // If status is FILLED but slotsLeft > 0, there's inconsistency - still show if slots available
+                if (i.getStatus() == InternshipStatus.FILLED && i.getSlotsLeft() > 0) {
+                    hasSlots = true; // Fix inconsistency - slotsLeft is source of truth
+                }
 
-                if (visibleOk && majorOk && levelOk)
+                if (visibleOk && majorOk && levelOk && hasSlots)
                     visibleList.add(i);
             }
 
@@ -320,7 +332,7 @@ public class InternshipManager {
                 System.out.println(i.toStudentView());
             }
         } else if (user instanceof CompanyRepresentative rep) {
-            // Reps: only their own internships
+            // Reps: only their own internships (excludeInternshipIds not used for reps)
             for (Internship i : all) {
                 if (i.getRepresentativeId().equalsIgnoreCase(rep.getUserId())) {
                     visibleList.add(i);

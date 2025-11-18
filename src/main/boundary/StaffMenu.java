@@ -40,7 +40,7 @@ public class StaffMenu {
 
             int choice = input.readInt("Enter choice: ", 1, 9);
             switch (choice) {
-                case 1 -> app.internshipManager.displayInternshipsForUser(currentStaff, filters);
+                case 1 -> app.internshipManager.displayInternshipsForUser(currentStaff, filters, null);
                 case 2 -> filterMenu.open(filters, true, false, false, true, true);
                 case 3 -> app.userManager.displayAllUsers();
                 case 4 -> approveInternships();

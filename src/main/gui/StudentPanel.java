@@ -194,6 +194,9 @@ public class StudentPanel extends JPanel {
         
         List<Internship> internships = app.internshipManager.getFilteredInternships(filters);
         
+        // Get all applications by this student to check if they've applied
+        List<Application> studentApplications = app.applicationManager.getMyApplications(student.getUserId());
+        
         for (Internship i : internships) {
             // Students only see approved, visible, major-compatible, and level-eligible internships
             // Exclude FILLED internships
@@ -207,7 +210,23 @@ public class StudentPanel extends JPanel {
             LocalDate opening = LocalDate.parse(i.getOpeningDate());
             boolean dateOk = !LocalDate.now().isBefore(opening) && !LocalDate.now().isAfter(closing);
             
-            if (visibleOk && majorOk && levelOk && dateOk && i.hasAvailableSlots() && i.getStatus() != InternshipStatus.FILLED) {
+            // Check if student has an active application (hide if PENDING, SUCCESSFUL, ACCEPTED, or WITHDRAWAL_PENDING)
+            // Show if WITHDRAWN or UNSUCCESSFUL (or no application)
+            boolean hasActiveApplication = studentApplications.stream()
+                .anyMatch(a -> a.getInternshipId().equalsIgnoreCase(i.getInternshipId())
+                    && (a.getStatus() == ApplicationStatus.PENDING
+                        || a.getStatus() == ApplicationStatus.SUCCESSFUL
+                        || a.getStatus() == ApplicationStatus.ACCEPTED
+                        || a.getStatus() == ApplicationStatus.WITHDRAWAL_PENDING));
+            
+            // Check slots - use slotsLeft as source of truth, but also check status for consistency
+            boolean hasSlots = i.hasAvailableSlots();
+            // If status is FILLED but slotsLeft > 0, there's inconsistency - still show if slots available
+            if (i.getStatus() == InternshipStatus.FILLED && i.getSlotsLeft() > 0) {
+                hasSlots = true; // Fix inconsistency - slotsLeft is source of truth
+            }
+            
+            if (visibleOk && majorOk && levelOk && dateOk && hasSlots && !hasActiveApplication) {
                 internshipTableModel.addRow(new Object[]{
                     i.getInternshipId(),
                     i.getTitle(),

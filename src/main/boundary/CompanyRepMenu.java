@@ -40,7 +40,7 @@ public class CompanyRepMenu {
 
             int choice = input.readInt("Enter choice: ", 1, 10);
             switch (choice) {
-                case 1 -> app.internshipManager.displayInternshipsForUser(currentRep, filters);
+                case 1 -> app.internshipManager.displayInternshipsForUser(currentRep, filters, null);
                 case 2 -> filterMenu.open(filters, true, true, true, true, true);
                 case 3 -> createInternshipInput();
                 case 4 -> editInternshipInput();
@@ -159,7 +159,7 @@ public class CompanyRepMenu {
 
     // Filter Applications by Internship ID
     private void filterByInternship() {
-        app.internshipManager.displayInternshipsForUser(currentRep, filters);
+        app.internshipManager.displayInternshipsForUser(currentRep, filters, null);
         String internshipId = input.readString("Enter Internship ID to view applications: ");
 
         List<Application> filtered = app.applicationManager.getApplicationsForInternship(internshipId);
