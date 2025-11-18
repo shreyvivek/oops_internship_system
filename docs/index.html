@@ -29,14 +29,14 @@
 			mix-blend-mode:soft-light;}
 		.wrap{max-width:1080px;margin:0 auto;padding:42px 18px 64px;position:relative;}
 		.hero{position:relative;border:1px solid var(--border);border-radius:18px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));box-shadow:0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;}
-		.ring{position:absolute;width:580px;height:580px;border-radius:50%;top:-240px;right:-220px;background:radial-gradient(closest-side, rgba(110,231,255,.20), transparent 70%);filter:blur(8px);animation:float 12s ease-in-out infinite;}
+		.ring{position:absolute;width:580px;height:580px;border-radius:50%;top:-240px;right:-220px;background:radial-gradient(closest-side, rgba(110,231,255,.20), transparent 70%);filter:blur(8px);animation:float 12s ease-in-out infinite;pointer-events:none;z-index:0;}
 		@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(14px) rotate(3deg)}}
 		h1{margin:6px 0 10px;font-size:34px;letter-spacing:.3px}
 		.badges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
 		.badge{font-size:12px;color:var(--muted);padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--glass)}
 		p.desc{color:var(--muted);margin:6px 0 0}
-		.btns{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-top:20px}
-		a.btn{display:flex;gap:10px;align-items:center;justify-content:center;padding:13px 14px;border-radius:12px;text-decoration:none;font-weight:800;color:#0b0f1c;background:linear-gradient(180deg,#9beafe,#6ee7ff);box-shadow:0 10px 24px rgba(110,231,255,.25), inset 0 1px 0 rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.7);transition:transform .12s ease, box-shadow .12s ease}
+		.btns{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-top:20px;position:relative;z-index:1}
+		a.btn{display:flex;gap:10px;align-items:center;justify-content:center;padding:13px 14px;border-radius:12px;text-decoration:none;font-weight:800;color:#0b0f1c;background:linear-gradient(180deg,#9beafe,#6ee7ff);box-shadow:0 10px 24px rgba(110,231,255,.25), inset 0 1px 0 rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.7);transition:transform .12s ease, box-shadow .12s ease;position:relative;z-index:2}
 		a.btn:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(110,231,255,.35), inset 0 1px 0 rgba(255,255,255,.9)}
 		a.btn span.i{width:10px;height:10px;border-radius:2px;background:#0b0f1c;box-shadow:0 0 0 1.5px rgba(0,0,0,.15) inset}
 		a.btn.blue{background:linear-gradient(180deg,#93b7ff,#5ea0ff)}
@@ -58,35 +58,34 @@
 			<div class="ring"></div>
 			<h1>Internship Placement Management System</h1>
 			<div class="badges">
-				<span class="badge">Object‑Oriented</span>
+				<span class="badge">OOP</span>
 				<span class="badge">BCE Architecture</span>
-				<span class="badge">CLI + Swing GUI</span>
-				<span class="badge">CSV Persistence</span>
+				<span class="badge">GUI + CLI</span>
 			</div>
-			<p class="desc">A clean, maintainable OOP codebase with Boundary–Control–Entity separation and fully generated Javadoc.</p>
+			<p class="desc">A clean, maintainable OOP codebase with Boundary–Control–Entity separation and detailed Javadoc with report and demo video.</p>
 			<div class="btns">
 				<a class="btn" href="https://github.com/shreyvivek/oops_internship_system" target="_blank" rel="noopener"><span class="i"></span>View Code</a>
 				<a class="btn blue" href="javadoc/index.html"><span class="i"></span>Open Javadoc</a>
 				<a class="btn amber" href="report.pdf" target="_blank" rel="noopener"><span class="i"></span>Open Report (PDF)</a>
-				<a class="btn red" href="https://youtu.be/KCn4xu6eOXE" target="_blank" rel="noopener"><span class="i"></span>Watch Demo Video</a>
+				<a class="btn red" href="https://youtu.be/KCn4xu6eOXE" target="_blank" rel="noopener"><span class="i"></span>Demo Video</a>
 			</div>
 		</section>
 		<div class="grid">
 			<div class="card">
 				<h3>Architecture</h3>
-				<p>Boundary–Control–Entity with package‑level docs and class responsibilities captured in Javadoc.</p>
+				<p>Boundary – Control – Entity with package ‑level docs and class responsibilities captured in Javadoc.</p>
 			</div>
 			<div class="card">
 				<h3>OOP Principles</h3>
-				<p>Encapsulation, SRP, Composition, Polymorphism. Business logic centralized in Control; Entities model state.</p>
+				<p>Encapsulation, Abstraction,Inheritance, Polymorphism and SOLID Principles. Logic centralized in Control; Entities model state.</p>
 			</div>
 			<div class="card">
-				<h3>Persistence</h3>
-				<p>CSV‑backed repositories with clean I/O abstraction. No database, JSON, or XML required.</p>
+				<h3>Data Persistence</h3>
+				<p>CSV file backed repositories with clean I/O abstraction. No database, JSON, or XML required.</p>
 			</div>
 			<div class="card">
 				<h3>Run Modes</h3>
-				<p>GUI: <span class="kbd">java -cp out main.InternshipPlacementSystem --gui</span><br/>CLI: <span class="kbd">--cli</span></p>
+				<p>GUI: <span class="kbd">java -cp out main.InternshipPlacementSystem --gui</span><br/>CLI: <span class="kbd">java -cp out main.InternshipPlacementSystem --cli</span></p>
 			</div>
 		</div>
 		<footer>
